@@ -1,18 +1,24 @@
 import { ActivityType, Client, Events, GatewayIntentBits, MessageFlags } from "discord.js";
 import { commands } from "./commands/index.ts";
 import { config } from "./config.ts";
+import { onMessage } from "./events/chatXp.ts";
 
 const byName = new Map(commands.map((c) => [c.data.name, c]));
 
 const client = new Client({
-  // Slash commands need no privileged intents. Add more here when a feature needs them
-  // (e.g. GuildMembers for welcome messages), and enable them in the Developer Portal.
-  intents: [GatewayIntentBits.Guilds],
+  // GuildMessages lets chat earn XP; the bot never needs to read message text, so the
+  // privileged MessageContent intent stays off. Privileged intents (e.g. GuildMembers for
+  // welcome messages) must also be enabled in the Developer Portal.
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
   presence: { activities: [{ name: "/help", type: ActivityType.Listening }] },
 });
 
 client.once(Events.ClientReady, (c) => {
   console.log(`Logged in as ${c.user.tag}, ${byName.size} commands loaded.`);
+});
+
+client.on(Events.MessageCreate, (message) => {
+  onMessage(message).catch((error) => console.error("Chat XP failed:", error));
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {

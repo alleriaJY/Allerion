@@ -8,11 +8,11 @@
     "node": ">=22.18"
   },
   "scripts": {
-    "start": "node --env-file-if-exists=.env src/index.ts",
-    "dev": "node --env-file-if-exists=.env --watch src/index.ts",
-    "deploy": "node --env-file-if-exists=.env src/deploy.ts",
+    "start": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env src/index.ts",
+    "dev": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env --watch src/index.ts",
+    "deploy": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env src/deploy.ts",
     "typecheck": "tsc",
-    "test": "node --test \"src/**/*.test.ts\""
+    "test": "node --disable-warning=ExperimentalWarning --test \"src/**/*.test.ts\""
   },
   "dependencies": {
     "discord.js": "^14.27.0"
